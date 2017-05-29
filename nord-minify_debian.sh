@@ -8,11 +8,6 @@ echo "### Reducing the size of the installation ###"
 echo "==> Disk usage before cleanup"
 df -h
 
-echo "==> Speed-up Grub boot, but always show the boot menu."
-sed -i 's/GRUB_TIMEOUT=[[:digit:]]\+/GRUB_TIMEOUT=1/g' /etc/default/grub
-sed -i 's/GRUB_HIDDEN_TIMEOUT/#GRUB_HIDDEN_TIMEOUT/g' /etc/default/grub
-update-grub
-
 echo "==> Removing documentation and manuals"
 cat > /etc/dpkg/dpkg.cfg.d/01_nodoc << EOF
 path-exclude /usr/share/doc/*
@@ -50,9 +45,6 @@ dpkg --list | awk '{ print $2 }' | grep -- '-doc$' | xargs apt-get -y purge
 echo "==> Removing X11 libraries"
 apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6
 
-echo "==> Removing obsolete networking components"
-apt-get -y purge ppp pppconfig pppoeconf
-
 echo "==> Removing other oddities"
 apt-get -y purge popularity-contest installation-report wireless-tools wpasupplicant
 
@@ -78,12 +70,12 @@ dpkg -l|grep "^rc"|cut -f 3 -d" "|xargs apt-get -y purge
 apt-get -y autoremove --purge
 apt-get -y autoclean
 apt-get -y clean
-echo "==> Removing APT lists"
-find /var/lib/apt/lists -type f -delete
+#echo "==> Removing APT lists"
+#find /var/lib/apt/lists -type f -delete
 echo "==> Removing man pages"
 find /usr/share/man -type f -delete
-echo "==> Removing anything in /usr/src"
-rm -rf /usr/src/*
+#echo "==> Removing anything in /usr/src"
+#rm -rf /usr/src/*
 echo "==> Removing any docs"
 find /usr/share/doc -type f -delete
 echo "==> Removing caches"
